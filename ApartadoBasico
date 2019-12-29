@@ -1,0 +1,82 @@
+-------DOMINIO---------
+
+(define (domain Books1)
+  (:requirements :strips :typing)
+  (:types book month)
+
+  (:predicates
+    (preced ?b1 - book ?b2 - book)
+    (assign ?b - book ?m - month)
+    (before ?m1 - month ?m2 - month)
+    (done ?b - book)
+    (wanted ?b - book)
+    (preced_ready ?b - book)
+    (forbide_month ?b - book ?m - month)
+    (not_preced ?b - book)
+    )
+
+  (:action read
+    :parameters (?b - book ?m - month)
+    :precondition (and (not (done ?b)) (wanted ?b) ( or (preced_ready ?b) (not_preced ?b)) (not (forbide_month ?b ?m) ) )
+    :effect (and (done ?b) (assign ?b ?m))
+    )
+
+
+(:action leer_antes
+  :parameters (?b1 - book ?b2 - book ?m - month)
+  :precondition (and (preced ?b1 ?b2) (not (done ?b2) ) (not (done ?b1) ) (wanted ?b2))
+  :effect (and (done ?b1) (assign ?b1 ?m) (preced_ready ?b2) (forbide_month ?b2 ?m))
+  )
+)
+
+
+
+
+
+-----PFILE---------
+(define (problem recomendation_of_books) (:domain Books1)
+(:objects
+	Quijote La_piedra_filosofal La_camara_de_los_secretos Biblia Amanecer_rojo Hijo_dorado - book
+	January February March April May June July August September October November December - month
+	)
+(:init
+	(before December January)
+	(before January February) (before January March) (before January April) (before January May)
+	(before January June) (before January July) (before January August) (before January September)
+	(before January October) (before January November) (before January December) (before February March)
+	(before February April) (before February May) (before February June) (before February July)
+	(before February August) (before February September) (before February October) (before February November)
+	(before February December) (before March April) (before March May) (before March June)
+	(before March July) (before March August) (before March September) (before March October)
+	(before March November) (before March December) (before April May) (before April June)
+	(before April July) (before April August) (before April September) (before April October)
+	(before April November) (before April December) (before May June)
+	(before May July) (before May August) (before May September)
+	(before May October) (before May November) (before May December) (before June July)
+	(before June August) (before June September) (before June October) (before June November)
+	(before June December) (before July August) (before July September) (before July October)
+	(before July November) (before July December) (before August September) (before August October)
+	(before August November) (before August December) (before September October) (before September November)
+	(before September December) (before October November) (before October December) (before November December)
+
+
+	(wanted Hijo_dorado)
+	(wanted La_camara_de_los_secretos)
+	(wanted Biblia)
+	(wanted Quijote)
+	(not_preced Biblia)
+	(not_preced La_piedra_filosofal)
+	(not_preced Amanecer_rojo)
+
+	(preced Biblia Quijote)
+	(preced La_piedra_filosofal La_camara_de_los_secretos)
+	(preced Amanecer_rojo Hijo_dorado)
+)
+
+(:goal (and
+		(done Biblia)
+		(done La_camara_de_los_secretos)
+		(done Hijo_dorado)
+	)
+)
+)
