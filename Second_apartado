@@ -1,6 +1,7 @@
 --- DOMAIN ---
 
 
+
 (define (domain Books1)
   (:requirements :strips :typing)
   (:types book month)
@@ -16,9 +17,9 @@
 
     (:action leer
       :parameters (?b1 - book  ?m1 - month)
-      :precondition (or (and (not_preced ?b1) (not (done ?b1) ) )
+      :precondition (and (not (done ?b1) ) (or (not_preced ?b1)
         (exists (?b2 - book ?m2 - month) (or (and (preced ?b2 ?b1) (assign ?b2 ?m2) (before ?m2 ?m1) )
-                                             (and (paral ?b1 ?b2) ( or (assign ?b2 ?m2) (assign ?b2 ?m1) ) (before ?m2 ?m1) ) ) ) )
+                                             (and (paral ?b1 ?b2) ( or (assign ?b2 ?m2) (assign ?b2 ?m1) ) (before ?m2 ?m1) ) ) ) ) )
       :effect ( and ( done ?b1 ) ( assign ?b1 ?m1 ) )
       )
     )
@@ -80,9 +81,14 @@ ONE_PIECE_12 ONE_PIECE_13 ONE_PIECE_14 ONE_PIECE_15 SUPERMAN_A SUPERMAN_B SUPERM
 
 (:goal (and
 		(done SUPERMAN_C)
+		(assign SUPERMAN_A January)
 		(done ONE_PIECE_15)
-		(forall (?b - book) (imply (paral ?b SUPERMAN_C) (done ?b) ))
-		(forall (?b - book) (imply (paral ?b ONE_PIECE_15) (done ?b) ))
+		(assign ONE_PIECE_1 January)
+		(done Hijo_dorado)
+
+
+		(forall (?b - book) (imply (done ?b) (forall (?b2 - book) (imply (paral ?b ?b2) (done ?b2) )) ))
+
 	)
 )
 )
