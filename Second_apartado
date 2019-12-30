@@ -71,9 +71,9 @@ ONE_PIECE_12 ONE_PIECE_13 ONE_PIECE_14 ONE_PIECE_15 SUPERMAN_A SUPERMAN_B SUPERM
 	(preced SUPERMAN_C SUPERMAN_D)
 
 ;			C ->  D
-			^
-			|
-			v
+;			^
+;			|
+;			v
 ;	A ->	B
 
 	(preced ONE_PIECE_14 ONE_PIECE_15) (preced ONE_PIECE_13 ONE_PIECE_14)
