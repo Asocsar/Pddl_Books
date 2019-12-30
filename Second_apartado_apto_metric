@@ -1,0 +1,102 @@
+---- DOMAIN ----
+(define (domain Books1)
+  (:requirements :strips :typing)
+  (:types book month)
+
+  (:predicates
+    (preced ?b1 - book ?b2 - book)
+    (assigned ?b - book ?m - month)
+    (paral ?b1 - book ?b2 - book)
+    (before ?m1 - month ?m2 - month)
+    (done ?b - book)
+    (not_preced ?b - book)
+    )
+
+    (:action leer
+      :parameters (?b1 - book  ?m1 - month)
+      :precondition (and (not (done ?b1) ) (or (not_preced ?b1)
+        (exists (?b2 - book ?m2 - month)
+          (and (preced ?b2 ?b1) (assigned ?b2 ?m2) (before ?m2 ?m1)))))
+      :effect (and ( done ?b1 ) ( assigned ?b1 ?m1 ) )
+      )
+    )
+
+
+
+
+
+
+
+---- PFILE ----
+(define (problem recomendation_of_books) (:domain Books1)
+(:objects
+Quijote La_piedra_filosofal La_camara_de_los_secretos El_prisionero_azkaban El_caliz_de_fuego Biblia Amanecer_rojo Hijo_dorado
+ONE_PIECE_1 ONE_PIECE_2 ONE_PIECE_3 ONE_PIECE_4 ONE_PIECE_5 ONE_PIECE_6 ONE_PIECE_7 ONE_PIECE_8 ONE_PIECE_9 ONE_PIECE_10 ONE_PIECE_11
+ONE_PIECE_12 ONE_PIECE_13 ONE_PIECE_14 ONE_PIECE_15 SUPERMAN_A SUPERMAN_B SUPERMAN_C SUPERMAN_D SUPERMAN_E - book
+	January February March April May June July August September October November December - month
+	)
+(:init
+(before January February)
+(before February March)
+(before March April)
+(before April May)
+(before May June)
+(before June July)
+(before July August)
+(before August September)
+(before September October)
+(before October November)
+(before November December)
+(before December January)
+
+
+	(preced Amanecer_rojo Hijo_dorado)
+	(preced Biblia Amanecer_rojo)
+	(preced Quijote Biblia)
+	(preced El_prisionero_azkaban El_caliz_de_fuego)
+	(preced La_camara_de_los_secretos El_prisionero_azkaban)
+	(preced La_piedra_filosofal La_camara_de_los_secretos)
+
+
+
+	(not_preced SUPERMAN_A)
+	(not_preced SUPERMAN_C)
+
+	(preced SUPERMAN_A SUPERMAN_B)
+
+	(paral SUPERMAN_C SUPERMAN_B)
+	(paral SUPERMAN_B SUPERMAN_C)
+
+	(preced SUPERMAN_C SUPERMAN_D)
+
+;			C ->  D
+			^
+			|
+;			v
+;	A ->	B
+
+	(preced ONE_PIECE_14 ONE_PIECE_15) (preced ONE_PIECE_13 ONE_PIECE_14)
+	(preced ONE_PIECE_12 ONE_PIECE_13) (preced ONE_PIECE_11 ONE_PIECE_12)
+	(preced ONE_PIECE_10 ONE_PIECE_11) (preced ONE_PIECE_9 ONE_PIECE_10)
+	(preced ONE_PIECE_8 ONE_PIECE_9) (preced ONE_PIECE_7 ONE_PIECE_8)
+	(preced ONE_PIECE_6 ONE_PIECE_7) (preced ONE_PIECE_5 ONE_PIECE_6)
+	(preced ONE_PIECE_4 ONE_PIECE_5) (preced ONE_PIECE_3 ONE_PIECE_4)
+	(preced ONE_PIECE_2 ONE_PIECE_3) (preced ONE_PIECE_1 ONE_PIECE_2)
+	(not_preced ONE_PIECE_1)
+	(not_preced Quijote)
+	(not_preced La_piedra_filosofal)
+
+	(paral ONE_PIECE_15 SUPERMAN_D)
+	(paral SUPERMAN_D ONE_PIECE_15)
+
+)
+
+(:goal (and
+
+
+		(done ONE_PIECE_15)
+		; (forall (?b - book) (imply (done ?b) (forall (?b2 - book) (imply (paral ?b2 ?b) (done ?b2) )) ))
+		(forall (?b - book) (imply (done ?b) (not (exists (?b2 - book) (and (paral ?b2 ?b) (not (done ?b2) ) ) ) ) ) )
+	)
+)
+)
