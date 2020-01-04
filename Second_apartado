@@ -8,21 +8,28 @@
 
   (:predicates
     (preced ?b1 - book ?b2 - book)
-    (assign ?b - book ?m - month)
+    (assigned ?b - book ?m - month)
     (paral ?b1 - book ?b2 - book)
     (before ?m1 - month ?m2 - month)
     (done ?b - book)
     (not_preced ?b - book)
+
     )
 
     (:action leer
       :parameters (?b1 - book  ?m1 - month)
-      :precondition (and (not (done ?b1) ) (or (not_preced ?b1)
-        (exists (?b2 - book ?m2 - month)
-          (and (preced ?b2 ?b1) (assign ?b2 ?m2) (before ?m2 ?m1)))))
-      :effect ( and ( done ?b1 ) ( assign ?b1 ?m1 ) )
+      :precondition (and (not (done ?b1) )
+                        (not (exists (?b3 - book ?m3 - month)
+                              (and (paral ?b3 ?b1) (or (assigned ?b3 ?m3) (assigned ?b3 ?m1) )
+                                    (and  (not (before ?m3 ?m1) ) (not (before ?m1 ?m3) ) ) ) ) )
+                        (or (not_preced ?b1)
+                            (exists (?b2 - book ?m2 - month)
+                            (and (preced ?b2 ?b1) (assigned ?b2 ?m2) (before ?m2 ?m1) ) )
+                        )
+                    )
+      :effect (and ( done ?b1 ) ( assigned ?b1 ?m1 ) )
       )
-    )
+)
 
 
 
@@ -70,11 +77,11 @@ ONE_PIECE_12 ONE_PIECE_13 ONE_PIECE_14 ONE_PIECE_15 SUPERMAN_A SUPERMAN_B SUPERM
 
 	(preced SUPERMAN_C SUPERMAN_D)
 
-;			C ->  D
+;	        C ->  D
 ;			^
 ;			|
 ;			v
-;	A ->	B
+;	A ->    B
 
 	(preced ONE_PIECE_14 ONE_PIECE_15) (preced ONE_PIECE_13 ONE_PIECE_14)
 	(preced ONE_PIECE_12 ONE_PIECE_13) (preced ONE_PIECE_11 ONE_PIECE_12)
@@ -87,14 +94,12 @@ ONE_PIECE_12 ONE_PIECE_13 ONE_PIECE_14 ONE_PIECE_15 SUPERMAN_A SUPERMAN_B SUPERM
 	(not_preced Quijote)
 	(not_preced La_piedra_filosofal)
 
-	(paral ONE_PIECE_15 SUPERMAN_D)
-	(paral SUPERMAN_D ONE_PIECE_15)
+	(paral ONE_PIECE_1 SUPERMAN_C)
+	(paral SUPERMAN_C ONE_PIECE_1)
 
 )
 
 (:goal (and
-
-
 		(done ONE_PIECE_15)
 		(forall (?b - book) (imply (done ?b) (forall (?b2 - book) (imply (paral ?b2 ?b) (done ?b2) )) ))
 	)
