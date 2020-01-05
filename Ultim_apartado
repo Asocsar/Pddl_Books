@@ -1,0 +1,221 @@
+---- DOMAIN -----
+
+(define (domain Books1)
+  (:requirements :strips :typing :fluents)
+  (:types book month)
+  (:functions
+  	(limit ?b - book)
+  	(paginas_mensuales ?m - month)
+    (quedan ?b - book ?m - month))
+
+  (:predicates
+    (preced ?b1 - book ?b2 - book)
+    (assigned ?b - book ?m - month)
+    (paral ?b1 - book ?b2 - book)
+    (before ?m1 - month ?m2 - month)
+    (done ?b - book)
+    (not_preced ?b - book)
+    (mes_act ?m - month)
+    (equal ?m1 - month ?m2 - month)
+    )
+
+
+;    (:action cambio_de_mes
+;        :parameters (?m1 - month ?m2 - month)
+;        :precondition (and (mes_act ?m1) (before ?m1 ?m2) (not (exists (?b - book) (and (done ?b)
+;    		(exists (?b2 - book)
+;                    (and
+;                        (paral ?b2 ?b)
+;                        (not (done ?b2))
+;                        (< (+ (limit ?b2) (paginas_mensuales) ) 800) )
+;                    ) ) ) ) ) )
+;        :effect (and (not (mes_act ?m1) ) (mes_act ?m2) (decrease (paginas_mensuales ?m1) (paginas_mensuales ?m1) ) ) )
+
+
+
+; :precondition (and (mes_act ?m1) (before ?m1 ?m2) )
+
+;ONE_PIECE_1 January February MArch April
+
+;SUPERMAN_A January // ONE_PIECE_1 January  1
+
+
+    (:action leer
+      :parameters (?b1 - book  ?m1 - month)
+      :precondition (and (not (done ?b1) ) (exists (?m2 - month ?m3 - month) (and (before ?m2 ?m1) (before ?m1 ?m3) (or (mes_act ?m1) (mes_act ?m2) (mes_act ?m3) ) ) ) ;(mes_act ?m1)
+      (> (limit ?b1) 0) (< (+ (paginas_mensuales ?m1) (limit ?b1) ) 800)
+                    (not (exists (?b3 - book ?m3 - month)
+                    (and
+                        (paral ?b3 ?b1)
+                        (assigned ?b3 ?m3)
+                        (not (before ?m3 ?m1) )
+                        (not (before ?m1 ?m3) )
+                        (not (equal ?m3 ?m1) )
+                        ) ) )
+                        (or (not_preced ?b1)
+                            (exists (?b2 - book ?m2 - month)
+                            (and (preced ?b2 ?b1) (assigned ?b2 ?m2) (before ?m2 ?m1) ) )
+                        )
+                    )
+
+
+      :effect (and ( done ?b1 ) ( assigned ?b1 ?m1 )
+      ;(forall (?mo - month ?ma - month) (when (and (mes_act ?ma) (before ?ma JANUARY) (> (paginas_mensuales JANUARY) 0)
+      ;(not (exists (?bl - book ?bp - book) (and (paral ?bl ?bp) (done ?bl) (not (done ?bp) ) ) ) )
+      ;)
+      ;(forall (?m - month) (when (and (before ?m1 ?m) (> (paginas_mensuales ?m) 0)
+      ;(not (exists (?bl - book ?bp - book) (and (paral ?bl ?bp) (done ?bl) (not (done ?bp) ) ) ) )
+      ;)
+         ; (decrease (paginas_mensuales ?mo) (paginas_mensuales ?mo) ) ) )
+     ; (forall (?m - month) (when (and (before ?m1 ?m) (not (exists (?b - book) (and (paral ?b1 ?b) (not (done ?b) ) ) ) ) ) (and (not (mes_act ?m1) ) (mes_act ?m) ) ) )
+      (forall (?m2 - month ?m3 - month) (when (and (mes_act ?m1) (before ?m2 ?m1) (before ?m1 ?m3)
+                                               (not (exists (?b - book) (and (paral ?b1 ?b) (not (done ?b) ) ) ) ) )
+                                               (and (not (mes_act ?m1) ) (mes_act ?m3) (decrease (paginas_mensuales ?m2) (paginas_mensuales ?m2) ) ) ) )
+
+      (increase (paginas_mensuales ?m1) (limit ?b1) ) )
+      )
+)
+
+--- PFILE ----
+
+(define (problem recomendation_of_books) (:domain Books1)
+(:objects
+Quijote La_piedra_filosofal La_camara_de_los_secretos El_prisionero_azkaban El_caliz_de_fuego Biblia Amanecer_rojo Hijo_dorado
+ONE_PIECE_1 ONE_PIECE_2 ONE_PIECE_3 ONE_PIECE_4 ONE_PIECE_5 ONE_PIECE_6 ONE_PIECE_7 ONE_PIECE_8 ONE_PIECE_9 ONE_PIECE_10 ONE_PIECE_11
+ONE_PIECE_12 ONE_PIECE_13 ONE_PIECE_14 ONE_PIECE_15 SUPERMAN_A SUPERMAN_B SUPERMAN_C SUPERMAN_D SUPERMAN_E - book
+	January February March April May June July August September October November December - month
+	)
+
+(:init
+(= (paginas_mensuales January) 0)
+(= (paginas_mensuales February) 0)
+(= (paginas_mensuales March) 0)
+(= (paginas_mensuales April) 0)
+(= (paginas_mensuales May) 0)
+(= (paginas_mensuales June) 0)
+(= (paginas_mensuales July) 0)
+(= (paginas_mensuales August) 0)
+(= (paginas_mensuales September) 0)
+(= (paginas_mensuales October) 0)
+(= (paginas_mensuales November) 0)
+(= (paginas_mensuales December) 0)
+(= (limit ONE_PIECE_1) 200)
+(= (limit ONE_PIECE_2) 200)
+(= (limit ONE_PIECE_3) 200)
+(= (limit ONE_PIECE_4) 200)
+(= (limit ONE_PIECE_5) 200)
+(= (limit ONE_PIECE_6) 200)
+(= (limit ONE_PIECE_7) 200)
+(= (limit ONE_PIECE_8) 200)
+(= (limit ONE_PIECE_9) 200)
+(= (limit ONE_PIECE_10) 200)
+(= (limit ONE_PIECE_11) 200)
+(= (limit ONE_PIECE_12) 200)
+(= (limit ONE_PIECE_13) 200)
+(= (limit ONE_PIECE_14) 200)
+(= (limit ONE_PIECE_15) 200)
+(= (limit SUPERMAN_A) 100)
+(= (limit SUPERMAN_B) 100)
+(= (limit SUPERMAN_C) 100)
+(= (limit SUPERMAN_D) 100)
+(before January February)
+(before February March)
+(before March April)
+(before April May)
+(before May June)
+(before June July)
+(before July August)
+(before August September)
+(before September October)
+(before October November)
+(before November December)
+(before December January)
+
+(equal January January)
+(equal February February)
+(equal March March)
+(equal April April)
+(equal May May)
+(equal June June)
+(equal July July)
+(equal August August)
+(equal September September)
+(equal October October)
+(equal November November)
+(equal December December)
+
+
+	(preced Amanecer_rojo Hijo_dorado)
+	(preced Biblia Amanecer_rojo)
+	(preced Quijote Biblia)
+	(preced El_prisionero_azkaban El_caliz_de_fuego)
+	(preced La_camara_de_los_secretos El_prisionero_azkaban)
+	(preced La_piedra_filosofal La_camara_de_los_secretos)
+
+
+
+	(not_preced SUPERMAN_A)
+	(not_preced SUPERMAN_C)
+
+	(preced SUPERMAN_A SUPERMAN_B)
+
+	(paral SUPERMAN_C SUPERMAN_B)
+	(paral SUPERMAN_B SUPERMAN_C)
+
+	(preced SUPERMAN_C SUPERMAN_D)
+
+;	        C ->  D
+;			^
+;			|
+;			v
+;	A ->    B
+
+	(preced ONE_PIECE_14 ONE_PIECE_15) (preced ONE_PIECE_13 ONE_PIECE_14)
+	(preced ONE_PIECE_12 ONE_PIECE_13) (preced ONE_PIECE_11 ONE_PIECE_12)
+	(preced ONE_PIECE_10 ONE_PIECE_11) (preced ONE_PIECE_9 ONE_PIECE_10)
+	(preced ONE_PIECE_8 ONE_PIECE_9) (preced ONE_PIECE_7 ONE_PIECE_8)
+	(preced ONE_PIECE_6 ONE_PIECE_7) (preced ONE_PIECE_5 ONE_PIECE_6)
+	(preced ONE_PIECE_4 ONE_PIECE_5) (preced ONE_PIECE_3 ONE_PIECE_4)
+	(preced ONE_PIECE_2 ONE_PIECE_3) (preced ONE_PIECE_1 ONE_PIECE_2)
+	(not_preced ONE_PIECE_1)
+	(not_preced Quijote)
+	(not_preced La_piedra_filosofal)
+
+	(paral ONE_PIECE_12 SUPERMAN_D)
+	(paral SUPERMAN_D ONE_PIECE_12)
+	(mes_act January)
+
+)
+
+(:goal (and
+		(done ONE_PIECE_15)
+		(not (exists (?b - book) (and (done ?b)
+		(exists (?b2 - book) (and (paral ?b2 ?b) (not (done ?b2) ) ) ) ) ) )
+		)
+)
+)
+
+;FALTA ARREGLAR FALLO DICIEMBRE
+
+;ff: found legal plan as follows
+
+;step    0: LEER ONE_PIECE_1 JANUARY
+;        1: LEER ONE_PIECE_2 FEBRUARY
+;        2: LEER ONE_PIECE_3 MARCH
+;        3: LEER SUPERMAN_C APRIL
+;        4: LEER ONE_PIECE_4 APRIL
+;        5: LEER ONE_PIECE_5 MAY
+;        6: LEER SUPERMAN_D MAY
+;        7: LEER ONE_PIECE_6 JUNE
+;        8: LEER ONE_PIECE_7 JULY
+;        9: LEER ONE_PIECE_8 AUGUST
+;       10: LEER ONE_PIECE_9 SEPTEMBER
+;       11: LEER ONE_PIECE_10 OCTOBER
+;       12: LEER ONE_PIECE_11 NOVEMBER
+;       13: LEER ONE_PIECE_12 DECEMBER
+  ;     14: LEER ONE_PIECE_13 JANUARY
+  ;     15: LEER ONE_PIECE_14 FEBRUARY
+  ;     16: LEER ONE_PIECE_15 MARCH
+  ;     17: LEER SUPERMAN_A APRIL
+  ;     18: LEER SUPERMAN_B MAY
+  ;     19: REACH-GOAL
