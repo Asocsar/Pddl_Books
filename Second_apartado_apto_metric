@@ -10,6 +10,7 @@
     (before ?m1 - month ?m2 - month)
     (done ?b - book)
     (not_preced ?b - book)
+    (equal ?m1 - month ?m2 - month)
 
     )
 
@@ -17,8 +18,13 @@
       :parameters (?b1 - book  ?m1 - month)
       :precondition (and (not (done ?b1) )
                         (not (exists (?b3 - book ?m3 - month)
-                              (and (paral ?b3 ?b1) (or (assigned ?b3 ?m3) (assigned ?b3 ?m1) )
-                                    (and  (not (before ?m3 ?m1) ) (not (before ?m1 ?m3) ) ) ) ) )
+                        (and
+                             (paral ?b3 ?b1)
+                             (assigned ?b3 ?m3)
+                             (not (before ?m3 ?m1) )
+                       	     (not (before ?m1 ?m3) )
+                             (not (equal ?m3 ?m1) )
+                        ) ) )
                         (or (not_preced ?b1)
                             (exists (?b2 - book ?m2 - month)
                             (and (preced ?b2 ?b1) (assigned ?b2 ?m2) (before ?m2 ?m1) ) )
@@ -55,6 +61,20 @@ ONE_PIECE_12 ONE_PIECE_13 ONE_PIECE_14 ONE_PIECE_15 SUPERMAN_A SUPERMAN_B SUPERM
 (before October November)
 (before November December)
 (before December January)
+
+(equal January January)
+(equal February February)
+(equal March March)
+(equal April April)
+(equal May May)
+(equal June June)
+(equal July July)
+(equal August August)
+(equal September September)
+(equal October October)
+(equal November November)
+(equal December December)
+
 
 
 	(preced Amanecer_rojo Hijo_dorado)
