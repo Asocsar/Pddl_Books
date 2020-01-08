@@ -6,7 +6,7 @@
   (:functions
   	(limit ?b - book)
   	(paginas_mensuales ?m - month)
-    (quedan ?b - book ?m - month))
+   )
 
   (:predicates
     (preced ?b1 - book ?b2 - book)
