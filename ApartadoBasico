@@ -15,7 +15,7 @@
     (not_preced ?b - book)
     )
 
-  (:action read
+  (:action leer
     :parameters (?b - book ?m - month)
     :precondition (and (not (done ?b)) (wanted ?b) ( or (preced_ready ?b) (not_preced ?b)) (not (forbide_month ?b ?m) ) )
     :effect (and (done ?b) (assign ?b ?m))
